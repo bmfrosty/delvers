@@ -18,15 +18,36 @@
       var ranged_weapons = ['crossbow (30 quarrels)', 'long bow (20 arrows)',
                             'short bow (20 arrows)', 'sling (30 stones)',
                             'javelin'];
-      var armor = ['gambeson', 'chain mail', 'plate mail'];
+      var armor = ['padded', 'leather', 'scale mail', 'chain mail', 'splint mail', 'plate mail'];
+      var l1armor = ['unarmored', 'padded', 'leather'];
 
       const encumbrances = {
-        'battle axe': 50, club: 50, 'crossbow (30 quarrels)': 50, dagger: 10,
-        'hand axe': 30, javelin: 20, 'long bow (20 arrows)': 30, mace: 30,
-        'pole arm': 150, 'short bow (20 arrows)': 30, 'silver dagger': 10,
-        'sling (30 stones)': 20, spear: 30, quarterstaff: 40, sword: 60,
-        'short sword': 30, 'two-handed sword': 150, 'war hammer': 30,
-        gambeson: 200, 'chain mail': 400, 'plate mail': 500, shield: 100
+        'battle axe': 50,
+        club: 50,
+        'crossbow (30 quarrels)': 50,
+        dagger: 10,
+        'hand axe': 30,
+        javelin: 20,
+        'long bow (20 arrows)': 30,
+        mace: 30,
+        'pole arm': 150,
+        'short bow (20 arrows)': 30,
+        'silver dagger': 10,
+        'sling (30 stones)': 20,
+        spear: 30,
+        quarterstaff: 40,
+        sword: 60,
+        'short sword': 30,
+        'two-handed sword': 150,
+        'war hammer': 30,
+        unarmored: 0,
+        padded: 10,
+        leather: 15,
+        'scale mail': 40,
+        'chain mail': 30,
+        'splint mail': 40,
+        'plate mail': 50,
+        shield: 10
       };
 
       const appearances = ['aquiline', 'athletic', 'barrel-chested', 'boney',
@@ -56,7 +77,7 @@
       }
 
       const wrap = (s) => s.replace(
-        /(?![^\n]{1,60}$)([^\n]{1,60})\s/g, '$1\n'
+        /(?![^\n]{1,100}$)([^\n]{1,100})\s/g, '$1\n'
       );
 
       function consolidator(some_array) {
@@ -210,20 +231,24 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Cleric {
         constructor() {
           this.name = "Cleric";
-	  this.hd = 6;
-	  this.max_level = 14;
+          this.hd = 6;
+          this.max_level = 14;
           this.xp_progression = [1500, 3000, 6000, 12000, 25000, 50000,
                                  100000, 200000, 300000, 400000, 500000,
                                  600000, 700000];
-          this.thaco_array = [20, 19, 19, 19, 19, 17, 17, 17, 17, 14, 14, 14,
-                              14, 12, 12]
+          this.thaco_array = [-1, 0, 0, 0, 0, 2, 2, 2, 2, 5, 5, 5, 5, 7, 7]
           this.post_name_level_hp_gain = 1;
-          this.specs = wrap('May use all armor and shields, but only blunt weapons. Divine magic. Turning undead.');
+          this.specs = wrap('May use all armor and shields, but only blunt weapons. \nDivine magic. \nTurning undead.');
         }
         class_equipment() {
-          var inv = ['holy water', 'holy symbol'];
-          inv.push(choose(armor));
+          var inv = [];
+          if (this.level = 1) {
+            inv.push(choose(l1armor));
+          } else {
+            inv.push(choose(armor));
+          }
           inv.push(choose(['mace', 'quarterstaff', 'war hammer']));
+          inv.concat(['holy water', 'holy symbol']);
           return inv;
         }
       }
@@ -232,14 +257,13 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Dwarf {
         constructor() {
           this.name = "Dwarf";
-	  this.hd = 8;
-	  this.max_level = 12;
+          this.hd = 8;
+          this.max_level = 12;
           this.xp_progression = [2200, 4400, 8800, 17000, 35000, 70000,
                                  140000, 270000, 400000, 530000, 660000]
-          this.thaco_array = [20, 19, 19, 19, 17, 17, 17, 14, 14, 14,
-                              12, 12, 12];
+          this.thaco_array = [-1, 0, 0, 0, 2, 2, 2, 5, 5, 5, 7, 7, 7, 9, 9]
           this.post_name_level_hp_gain = 3;
-          this.specs = wrap('Proficient with all armor. May only use small or normal-sized weapons. Detects construction tricks at 2-in-6. Detects room traps at 2-in-6. Hears subtle sounds at 2-in-6. Infravistion (60\').');
+          this.specs = wrap('Proficient with all armor. \nMay only use small or normal-sized weapons. \nDetects construction tricks at 2-in-6. \nDetects room traps at 2-in-6. \nHears subtle sounds at 2-in-6. \nInfravistion (60\').');
         }
         class_equipment() {
           var inv = [];
@@ -258,13 +282,13 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Elf {
         constructor() {
           this.name = "Elf";
-	  this.hd = 6;
-	  this.max_level = 10;
+          this.hd = 6;
+          this.max_level = 10;
           this.xp_progression = [4000, 8000, 16000, 32000, 64000, 120000,
                                  250000, 400000, 600000];
-          this.thaco_array = [20, 19, 19, 19, 17, 17, 17, 14, 14, 14, 12]
+          this.thaco_array = [-1, 0, 0, 0, 2, 2, 2, 5, 5, 5, 7, 7, 7, 9, 9]
           this.post_name_level_hp_gain = 2;
-          this.specs = wrap('Spellcasting. Proficient with all weapons and armor. Detects secret doors at 2-in-6. Hears subtle sounds at with 2-in-6. Immune to paralysis. Infravision (60\').');
+          this.specs = wrap('Spellcasting. \nProficient with all weapons and armor. \nDetects secret doors at 2-in-6. \nHears subtle sounds at with 2-in-6. \nImmune to paralysis. \nInfravision (60\').');
         }
         class_equipment() {
           var inv = ['spellbook'];
@@ -279,13 +303,12 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Fighter {
         constructor() {
           this.name = "Fighter";
-	  this.hd = 8;
-	  this.max_level = 14;
+          this.hd = 8;
+          this.max_level = 14;
           this.xp_progression = [2000, 4000, 8000, 16000, 32000, 64000,
                                  120000, 240000, 360000, 480000, 600000,
                                  720000, 840000]
-          this.thaco_array = [20, 19, 19, 19, 17, 17, 17, 14, 14, 14, 12, 12,
-                              12, 10, 10]
+          this.thaco_array = [-1, 0, 0, 0, 2, 2, 2, 5, 5, 5, 7, 7, 7, 9, 9]
           this.post_name_level_hp_gain = 2;
           this.specs = wrap('Proficient with all armor, weapons, and shields.');
         }
@@ -307,13 +330,13 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Halfling {
         constructor() {
           this.name = "Halfling";
-	  this.hd = 6;
-	  this.max_level = 8;
+          this.hd = 6;
+          this.max_level = 8;
           this.xp_progression = [2000, 4000, 8000, 16000, 32000, 64000,
                                  120000]
-          this.thaco_array = [20, 19, 19, 19, 17, 17, 17, 14, 14, 14]
+          this.thaco_array = [-1, 0, 0, 0, 2, 2, 2, 5, 5, 5, 7, 7, 7, 9, 9]
           this.post_name_level_hp_gain = 0;
-          this.specs = wrap('Proficient with all weapons and armor, but they must be tailored to a halfling\'s small stature. +2 to AC vs. large creatures. 90% chance to hide in the woods; 2-in-6 in dungeons. 2-in-6 chance to hear subtle sounds. +1 to hit for ranged attacks.');
+          this.specs = wrap('Proficient with all weapons and armor, but they must be tailored to a halfling\'s small stature. \n+2 to AC vs. large creatures. \n90% chance to hide in the woods; 2-in-6 in dungeons. \n2-in-6 chance to hear subtle sounds. \n+1 to hit for ranged attacks.');
         }
         class_equipment() {
           var inv = [];
@@ -332,15 +355,14 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class MagicUser {
         constructor() {
           this.name = "Magic user";
-	  this.hd = 4;
-	  this.max_level = 14;
+          this.hd = 4;
+          this.max_level = 14;
           this.xp_progression = [2500, 5000, 10000, 20000, 40000,
                                  80000, 150000, 300000, 450000, 600000,
                                  750000, 900000, 1050000]
-          this.thaco_array = [20, 19, 19, 19, 19, 19, 17, 17, 17, 17, 17, 14,
-                              14, 14, 14]
+          this.thaco_array = [-1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 5, 5, 5, 5]
           this.post_name_level_hp_gain = 1;
-          this.specs = wrap('Spellcasting. May not wear armor. Dagger is sole weapon.');
+          this.specs = wrap('Spellcasting. \nMay not wear armor. \nDagger is sole weapon.');
         }
         class_equipment() {
           var inv = ['spellbook', 'dagger'];
@@ -352,23 +374,42 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Thief {
         constructor() {
           this.name = "Thief";
-	  this.hd = 4;
-	  this.max_level = 14;
+          this.hd = 4;
+          this.max_level = 14;
           this.xp_progression = [1200, 2400, 4800, 9600, 20000, 40000,
                                  80000, 160000, 280000, 400000, 520000,
                                  640000, 760000]
-          this.thaco_array = [20, 19, 19, 19, 19, 17, 17, 17, 17, 14, 14, 14,
-                              14, 12, 12]
+          this.thaco_array = [-1, 0, 0, 0, 0, 2, 2, 2, 2, 5, 5, 5, 5, 7, 7]
           this.post_name_level_hp_gain = 2;
-          this.specs = wrap('May back-stab at +4 to hit and 2x damage. Proficient with all weapons, but only light armor. 80% chance to decipher languages at level 4+. 90% chance to use scrolls from level 10+. Able to climb sheer surfaces, find or remove treasure traps, hear subtle noises, hide in shadows, move silently, open locks, and pick pockets.');
+          this.specs = wrap('May back-stab at +4 to hit and 2x damage. \nProficient with all weapons, but only light armor. \n80% chance to decipher languages at level 4+. \n90% chance to use scrolls from level 10+. \nAble to climb sheer surfaces, \n find or remove treasure traps, \n hear subtle noises, \n hide in shadows, \n move silently, \n open locks, \n and pick pockets.');
         }
         class_equipment() {
-          var inv = ['thieves\' tools', 'gambeson'];
+          var inv = ['thieves\' tools', 'leather'];
           inv.push(choose(melee_weapons));
           inv.push(choose(ranged_weapons));
           return inv;
         }
       }
+
+      class Peasant {
+        constructor() {
+          this.name = "Peasant";
+          this.hd = 2;
+          this.max_level = 0;
+          this.xp_progression = [1500, 3000, 6000, 12000, 25000, 50000,
+                                 100000, 200000, 300000, 400000, 500000,
+                                 600000, 700000];
+          this.thaco_array = [-1, -1, 0, 0, 0, 2, 2, 2, 2, 5, 5, 5, 5, 7, 7]
+          this.post_name_level_hp_gain = 1;
+          this.specs = wrap('May use all armor and shields, but only blunt weapons. \nDivine magic. \nTurning undead.');
+        }
+        class_equipment() {
+          var inv = [];
+          inv.push(choose(['hand axe', 'dagger', 'club']));
+          return inv;
+        }
+      }
+
       cleric_spells_per_day = [
           [0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0],
@@ -462,12 +503,12 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
       class Character {
         constructor(name='', abis=null, char_class=null) {
           this.name = name;
-	  if (char_class === null) {
+          if (char_class === null) {
             this.char_class = new Fighter();
           } else {
             this.char_class = new char_class;
           }
-	  if (abis === null) {
+          if (abis === null) {
             this.abis = new Abilities();
           } else {
             this.abis = abis;
@@ -492,18 +533,20 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
           }
         }
         generate_inventory() {
-          var inv_array = get_generic_gear();
-          inv_array = inv_array.concat(this.char_class.class_equipment());
+          var inv_array = this.char_class.class_equipment();
+          // var inv_array = get_generic_gear();
+          inv_array = inv_array.concat(get_generic_gear());
           const coins = d(3, 6);
-          this.encumbrance = 80 + coins;
+          // backpack =
+          this.encumbrance = 0 + coins / 10;
           for (const k of inv_array) {
             if (Object.keys(encumbrances).includes(k)) {
               this.encumbrance += encumbrances[k];
             }
           }
           inv_array.push(`gold pieces (${coins})`);
-          inv_array.sort();
-          var inv = inv_array.join(', ');
+          // inv_array.sort();
+          var inv = inv_array.join('\n');
           inv = wrap(inv, 120);
           return inv;
         }
@@ -519,46 +562,56 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
           }
         }
         get ac() {
-	  var inv = this.inventory.replace(/\n/g, ' ')
+          var inv = this.inventory.replace(/\n/g, ' ')
           if (inv.includes('plate mail')) {
-            var base_ac = 3;
+            var base_ac = 16;
+          } else if (inv.includes('splint mail')) {
+            var base_ac = 15;
           } else if (inv.includes('chain mail')) {
-            var base_ac = 5;
-          } else if (inv.includes('gambeson')) {
-            var base_ac = 7;
+            var base_ac = 14;
+          } else if (inv.includes('scale mail')) {
+            var base_ac = 13;
+          } else if (inv.includes('leather')) {
+            var base_ac = 12;
+          } else if (inv.includes('padded')) {
+            var base_ac = 11;
           } else {
-            var base_ac = 9;
+            var base_ac = 10;
           }
           if (this.inventory.includes('shield')) {
-            base_ac -= 1;
+            base_ac += 1;
           }
-          return base_ac - Number(this.abis.dexmod);
+          return base_ac + Number(this.abis.dexmod);
         }
         get base_thac0() {
           return this.char_class.thaco_array[this.level]
         }
         get melee_thac0() {
-          return this.base_thac0 - Number(this.abis.strmod);
+          return this.base_thac0 + Number(this.abis.strmod);
         }
         get ranged_thac0() {
           var hobbit_bonus = 0
           if (this.char_class.name === 'Halfling') {
             hobbit_bonus = 1
           }
-          return this.base_thac0 - Number(this.abis.dexmod) - hobbit_bonus;
+          return this.base_thac0 + Number(this.abis.dexmod) + hobbit_bonus;
         }
         get character_sheet() {
           const ncol = 23;
           var name_bit = `Name: ${this.name}`.padEnd(ncol);
-          var level_bit = `Level: ${this.level}`.padEnd(ncol);
+          if (this.char_class.name === 'Peasant') {
+            var level_bit = `Level: 0`.padEnd(ncol);
+          } else {
+            var level_bit = `Level: ${this.level}`.padEnd(ncol);
+          }
           var class_bit = `Class: ${this.char_class.name}`.padEnd(ncol);
           var statblock = this.abis.say_abis().split('\n');
           statblock[1] += `    HP: ${this.hp}`;
           statblock[2] += `    AC: ${this.ac}`;
-          statblock[3] += `    THAC0 (melee): ${this.melee_thac0}`;
-          statblock[4] += `    THAC0 (ranged): ${this.ranged_thac0}`;
-          statblock[5] += `    MOVEMENT: ${this.move}`;
-          statblock[6] += `    XP: ${this.xp}`;
+          statblock[3] += `    XP: ${this.xp}`;
+          statblock[4] += `    Melee To-Hit Bonus:  ${this.melee_thac0}`;
+          statblock[5] += `    Ranged To-Hit Bonus: ${this.ranged_thac0}`;
+          statblock[6] += `    MOVEMENT:            ${this.move}`;
           var spells = '';
           if (this.char_class.name === 'Cleric') {
             var spd = cleric_spells_per_day[this.level].slice(1);
@@ -590,15 +643,15 @@ EQUIPMENT:
 ${this.inventory}
 
 ENCUMBRANCE:
-${this.encumbrance} coins-weight`;
+${this.encumbrance} lbs`;
         }
       }
     </script>
   </head>
   <body onload="roll_up_char()">
-    <div style="max-width:500px; margin:auto">
-      <h1 style="font-family:'Eagle Lake';text-align:center;">Random OSR Character</h1>
-      <p style="font-family:'IM Fell DW Pica';text-align:justify;">These characters are <a href="https://oldschoolessentials.necroticgnome.com/srd/index.php/Main_Page">1981 B/X</a> by-the-book with a few minor exceptions. Gambeson is substituted for leather armor. Characters get max HP at first level. THAC0 is used instead of the OG to-hit matrix.</p>
+    <div style="max-width:833px; margin:auto">
+      <h1 style="font-family:'Eagle Lake';text-align:center;">Random Labyrinth Lord Character</h1>
+      <p style="font-family:'IM Fell DW Pica';text-align:justify;">These characters are <a href="https://oldschoolessentials.necroticgnome.com/srd/index.php/Main_Page">1981 B/X</a> by-the-book with a few minor exceptions:<br> Characters get max HP at first level.<br> Ascending AC is used instead THAC0 or the OG to-hit matrix.</p>
       <label for="level">Level: </label>
       <input type="number" name="level" id="level" value=1  style="width:3em">
       <label for="classy">Class: </label>
@@ -611,6 +664,7 @@ ${this.encumbrance} coins-weight`;
         <option value="halfling">halfling</option>
         <option value="magic user">magic user</option>
         <option value="thief">thief</option>
+        <option value="peasant">peasant</option>
       </select>
       <button onclick="roll_up_char(document.getElementById('level').value, document.getElementById('classy').value)">Let's roll!</button>
       <pre id="sheet" style="font-family: 'Courier Prime', monospace;font-size:0.87em;"></pre>
@@ -620,32 +674,35 @@ ${this.encumbrance} coins-weight`;
         var abis = new Abilities();
         if (cls === 'rando') {
           max_abi = Math.max(...abis.abi_list);
-          if (abis.strength === max_abi) {
-            if (abis.intelligence > 9 && Math.random() < 0.07) {
+
+          if (abis.intelligence > 12 && abis.strength > 12 ) {
+            if (Math.random() < 0.07) {
               cls = 'elf';
             } else {
               cls = 'fighter';
             }
-          } else if (abis.constitution > 9 && abis.constitution === max_abi
-                     && Math.random() < 0.4) {
-            cls = 'dwarf';
-          } else if (abis.dexterity === max_abi) {
-            if (abis.constitution > 9 && abis.dexterity > 9 && Math.random() < 0.2) {
+          } else if (abis.constitution > 12 && abis.strength > 12 ) {
+            if (Math.random() < 0.4) {
+              cls = 'dwarf';
+            } else {
+              cls = 'fighter';
+            }
+          } else if (abis.constitution > 12 && abis.dexterity > 12  ) {
+            if (Math.random() < 0.2) {
               cls = 'halfling';
             } else {
               cls = 'thief';
             }
-          } else if (abis.intelligence === max_abi) {
-            if (abis.intelligence > 9 && Math.random() < 0.7) {
-              cls = 'elf';
-            } else {
+          } else if (abis.dexterity === max_abi  && abis.dexterity > 12 ) {
+            cls = 'thief';
+          } else if (abis.intelligence === max_abi  && abis.intelligence > 12 ) {
             cls = 'magic user';
-            }
-          } else if (abis.wisdom === max_abi) {
+          } else if (abis.wisdom === max_abi  && abis.wisdom > 12 ) {
             cls = 'cleric';
+          } else if (abis.strength === max_abi  && abis.strength > 12 ) {
+            cls = 'fighter';
           } else {
-          cls = ['cleric', 'fighter',
-                 'magic user', 'thief'][Math.floor(Math.random()*7)]
+            cls = 'peasant';
           }
         }
         classes = {
@@ -655,7 +712,8 @@ ${this.encumbrance} coins-weight`;
           fighter: Fighter,
           halfling: Halfling,
           'magic user': MagicUser,
-          thief: Thief
+          thief: Thief,
+          peasant: Peasant
         }
         var foo = new Character('', abis, classes[cls]);
         for (i = 0; i < level - 1; i++) {
