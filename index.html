@@ -197,6 +197,10 @@
           return [this.strength, this.dexterity, this.constitution,
                   this. intelligence, this.wisdom, this.charisma]
         }
+        get abi_short_list() {
+          return [this.strength, this.dexterity,
+                  this. intelligence, this.wisdom]
+        }
         get strmod() {
           return this.mod[this.strength]
         }
@@ -673,7 +677,8 @@ ${this.encumbrance} lbs`;
       function roll_up_char (level=1, cls='rando') {
         var abis = new Abilities();
         if (cls === 'rando') {
-          max_abi = Math.max(...abis.abi_list);
+          max_abi = Math.max(...abis.abi_short_list);
+          max_abi_full = Math.max(...abis.abi_list);
 
           if (abis.intelligence > 12 && abis.strength > 12 ) {
             if (Math.random() < 0.07) {
