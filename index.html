@@ -693,14 +693,14 @@ ${this.encumbrance} lbs`;
             } else {
               cls = 'thief';
             }
-          } else if (abis.dexterity === max_abi  && abis.dexterity > 12 ) {
-            cls = 'thief';
-          } else if (abis.intelligence === max_abi  && abis.intelligence > 12 ) {
-            cls = 'magic user';
-          } else if (abis.wisdom === max_abi  && abis.wisdom > 12 ) {
-            cls = 'cleric';
           } else if (abis.strength === max_abi  && abis.strength > 12 ) {
             cls = 'fighter';
+            } else if (abis.dexterity === max_abi  && abis.dexterity > 12 ) {
+            cls = 'thief';
+          } else if (abis.wisdom === max_abi  && abis.wisdom > 12 ) {
+            cls = 'cleric';
+          } else if (abis.intelligence === max_abi  && abis.intelligence > 12 ) {
+            cls = 'magic user';
           } else {
             cls = 'peasant';
           }
