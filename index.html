@@ -15,18 +15,24 @@
       var melee_weapons = ['battle axe', 'hand axe', 'dagger', 'silver dagger',
                            'short sword', 'sword', 'two-handed sword', 'mace',
                            'club', 'pole arm', 'spear', 'war hammer'];
-      var ranged_weapons = ['crossbow (30 quarrels)', 'long bow (20 arrows)',
+      var ranged_weapons = ['crossbow, heavy (30 quarrels)', 'crossbow, light (30 quarrels)', 'long bow (20 arrows)',
                             'short bow (20 arrows)', 'sling (30 stones)',
                             'javelin'];
       var armor = ['padded', 'leather', 'scale mail', 'chain mail', 'splint mail', 'plate mail'];
       var l1armor = ['unarmored', 'padded', 'leather'];
 
       const encumbrances = {
-        'battle axe': 50,
-        club: 50,
-        'crossbow (30 quarrels)': 50,
-        dagger: 10,
-        'hand axe': 30,
+        'battle axe': 6,
+        club: 3,
+        'crossbow, heavy (30 quarrels)': 11,
+        'crossbow, light (30 quarrels)': 7,
+        dagger: 1,
+        'silver dagger': 1,
+        dart: 0.5,
+        flail: 5,
+        'flail, heavy': 10,
+
+        'hand axe': 3,
         javelin: 20,
         'long bow (20 arrows)': 30,
         mace: 30,
@@ -40,6 +46,7 @@
         'short sword': 30,
         'two-handed sword': 150,
         'war hammer': 30,
+
         unarmored: 0,
         padded: 10,
         leather: 15,
@@ -414,6 +421,24 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
         }
       }
 
+      class Nobody {
+        constructor() {
+          this.name = "Nobody";
+          this.hd = 2;
+          this.max_level = 0;
+          this.xp_progression = [1500, 3000, 6000, 12000, 25000, 50000,
+                                 100000, 200000, 300000, 400000, 500000,
+                                 600000, 700000];
+          this.thaco_array = [-1, -1, 0, 0, 0, 2, 2, 2, 2, 5, 5, 5, 5, 7, 7]
+          this.post_name_level_hp_gain = 1;
+          this.specs = wrap('This should have been something, but was nothing instead.\nChoose your own class.');
+        }
+        class_equipment() {
+          var inv = [];
+          return inv;
+        }
+      }
+
       cleric_spells_per_day = [
           [0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0],
@@ -505,10 +530,10 @@ Charisma:     ${("  " + this.charisma).slice(-2)} ${this.chamod}`
 
 
       class Character {
-        constructor(name='', abis=null, char_class=null) {
+        constructor(name='', abis=null, char_class=null, max_abi=null, max_abi_full=null) {
           this.name = name;
           if (char_class === null) {
-            this.char_class = new Fighter();
+            this.char_class = new Nobody();
           } else {
             this.char_class = new char_class;
           }
@@ -694,7 +719,7 @@ ${this.encumbrance} lbs`;
             }
           } else if (abis.strength === max_abi  && abis.strength > 12 ) {
             cls = 'fighter';
-            } else if (abis.dexterity === max_abi  && abis.dexterity > 12 ) {
+          } else if (abis.dexterity === max_abi  && abis.dexterity > 12 ) {
             cls = 'thief';
           } else if (abis.wisdom === max_abi  && abis.wisdom > 12 ) {
             cls = 'cleric';
@@ -714,7 +739,7 @@ ${this.encumbrance} lbs`;
           thief: Thief,
           peasant: Peasant
         }
-        var foo = new Character('', abis, classes[cls]);
+        var foo = new Character('', abis, classes[cls], max_abi, max_abi_full);
         for (i = 0; i < level - 1; i++) {
           foo.level_up()
         }
